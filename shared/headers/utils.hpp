@@ -8,23 +8,27 @@
             mike-matera/ArduinoSTL @ ^1.3.3
             silent/function_objects @ ^1.0.0
 */
-#ifndef ARDUINO_BUILD
-    #include <functional>
-    #include <string>
-    template<typename __F>
-    // namespace utils {
-        using functor = std::function<__F>;
-        using string = std::string;
-    // }
-
-#else
+#ifdef ARDUINO_BUILD
     #include <function_objects.h>
     #include <string>
     template <typename __F>
-    // namespace utils {
-        using functor = FunctionObject<__F>;
-        using string = std::string;
-    // }
+    using functor = FunctionObject<__F>;
+    using string = std::string;
+
+    #define LOG(...) 
+#else
+    #include <functional>
+    #include <string>
+    template<typename __F>
+    using functor = std::function<__F>;
+    using string = std::string;
+
+    #include <iostream>
+    #define LOG(...) __log_impl(__VA_ARGS__)
+    template<typename... Arg_t>
+        void __log_impl(Arg_t... args) {
+        ((std::cout << args << ' '), ...);
+    }
 #endif
 
 #include <stdint.h>

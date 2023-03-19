@@ -5,11 +5,11 @@ using namespace uahruart::messages;
 #include <iostream>
 
 uahruart::serial::SerialBuffer Header::serialize(serial::SerialBuffer &buffer) const {
-    return buffer << length << primitives::SEPARATOR << type;
+    return buffer << type;
 }
 
 uahruart::serial::SerialBuffer Header::deserialize(const serial::SerialBuffer &buffer) {
-    return buffer >> length >> primitives::SEPARATOR >> type;
+    return buffer >> type;
 }
 
 uahruart::serial::SerialBuffer Test::serialize(serial::SerialBuffer &buffer) const {

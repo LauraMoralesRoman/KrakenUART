@@ -30,6 +30,8 @@ namespace uahruart::serial {
 
             friend serial::SerialBuffer operator<<(SerialBuffer buffer, const Serializable& serializable);
             friend serial::SerialBuffer operator>>(const SerialBuffer buffer, Serializable& serializable);
+            friend serial::SerialBuffer operator<<(SerialBuffer buffer, const char msg);
+            friend serial::SerialBuffer operator>>(const SerialBuffer buffer, char& msg);
     };
 
     class Serializable {
@@ -41,6 +43,8 @@ namespace uahruart::serial {
 
     serial::SerialBuffer operator<<(SerialBuffer buffer, const Serializable& serializable);
     serial::SerialBuffer operator>>(const SerialBuffer buffer, Serializable& serializable);
+    serial::SerialBuffer operator<<(SerialBuffer buffer, const char msg);
+    serial::SerialBuffer operator>>(const SerialBuffer buffer, char& msg);
 }
 
 #endif // SERIAL_HPP

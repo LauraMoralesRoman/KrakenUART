@@ -6,19 +6,22 @@ using namespace uahruart::serial;
 
 SerialBuffer uahruart::serial::operator<<(SerialBuffer buffer, const Serializable& serializable) {
     auto new_buffer = serializable.serialize(buffer);
-    // new_buffer.m_ammount_rw += ammount;
-
-    // SerialBuffer::on_serialize(ammount, new_buffer);
-
     return new_buffer;
 }
 
 SerialBuffer uahruart::serial::operator>>(const SerialBuffer buffer, Serializable& serializable) {
     auto new_buffer = serializable.deserialize(buffer);
-    // new_buffer.m_ammount_rw += ammount;
-    // SerialBuffer::on_serialize(ammount, new_buffer);
-
     return new_buffer;
+}
+
+SerialBuffer uahruart::serial::operator<<(SerialBuffer buffer, const char msg) {
+    buffer[0] = msg;
+    return buffer + 1;
+}
+
+SerialBuffer uahruart::serial::operator>>(const SerialBuffer buffer, char& msg) {
+    msg = buffer[0];
+    return buffer + 1;
 }
 
 SerialBuffer::SerialBuffer(const size_t size, char* buffer) 

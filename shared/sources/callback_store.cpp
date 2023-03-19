@@ -28,6 +28,7 @@ struct Invoker {
 CallbackStore::InvokersArr_t CallbackStore::m_invokers {
     T(primitives::Int),
     T(primitives::String),
+    T(primitives::Bool),
     
     T(messages::Test),
     T(messages::RPCCall),

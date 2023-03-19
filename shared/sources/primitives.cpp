@@ -75,3 +75,18 @@ uahruart::serial::SerialBuffer String::deserialize(const serial::SerialBuffer &b
 
     return buffer + cnt;
 }
+
+uahruart::serial::SerialBuffer Bool::serialize(serial::SerialBuffer &buffer) const {
+    buffer[0] = m_value ? '1':'0'; 
+    return buffer + 1;
+}
+
+uahruart::serial::SerialBuffer Bool::deserialize(const serial::SerialBuffer &buffer) {
+    m_value = buffer[0] == '1';
+    return buffer + 1;
+}
+
+Bool::Bool(const bool value)
+    : m_value(value) {
+
+}

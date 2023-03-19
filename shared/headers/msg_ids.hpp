@@ -8,6 +8,7 @@ namespace uahruart {
         // Primitives
         PRIMITIVE_INT,
         PRIMITIVE_STR,
+        PRIMITIVE_BOOL,
         // Messages
         TEST,
         RPC_CALL,

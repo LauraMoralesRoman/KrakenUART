@@ -1,7 +1,9 @@
-#include "protocol.hpp"
 #include <Arduino.h>
+#include "protocol.hpp"
 
 uahruart::CallbackStore store;
+
+uahruart::parser::Protocol protocol;
 
 uint32_t time_sleep = 100;
 void setup() {

@@ -12,6 +12,8 @@ set(CMAKE_CXX_FLAGS_DEBUG "-ggdb")
 # Libraries
 add_subdirectory(shared)
 
+set (SERVER_FILES serial_port.hpp serial_port.cpp)
+
 add_compile_options(-Wall -fanalyzer)
 add_executable(ProtocolV3 main.cpp)
 target_link_libraries(ProtocolV3 protocol -lpthread)
@@ -20,6 +22,19 @@ target_link_libraries(ProtocolV3 protocol -lpthread)
 add_custom_target(run
     COMMAND ./ProtocolV3
     DEPENDS ./ProtocolV3)
+
+add_executable(ProtocolV3_TX main_rx.cpp ${SERVER_FILES})
+add_executable(ProtocolV3_RX main_tx.cpp ${SERVER_FILES})
+
+target_link_libraries(ProtocolV3_TX protocol -lpthread)
+target_link_libraries(ProtocolV3_RX protocol -lpthread)
+
+set (modem_rx /dev/tnt0)
+set (modem_tx /dev/tnt1)
+
+add_custom_target(test
+    COMMAND "mprocs" "--names" "'TX','RX'" "--" './ProtocolV3_TX ${modem_rx}' './ProtocolV3_RX ${modem_tx}'
+    DEPENDS ProtocolV3_TX ProtocolV3_RX)
 
 add_custom_target(check
     COMMAND cppcheck --std=c++17 --enable=all --inconclusive --inline-suppr ../shared

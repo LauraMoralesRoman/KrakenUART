@@ -41,6 +41,26 @@ namespace uahruart::primitives {
         private:
             string m_value = "";
     };
+
+    class Bool: public virtual serial::Serializable {
+        public:
+            using Underlying_t = bool;
+
+            Bool(const bool val);
+            Bool() = default;
+
+            serial::SerialBuffer serialize(serial::SerialBuffer& buffer) const override;
+            serial::SerialBuffer deserialize(const serial::SerialBuffer& buffer) override;
+
+            virtual const IDs type_id() const override {return IDs::PRIMITIVE_BOOL;}
+
+            Underlying_t to_underlying() const {return m_value;}
+
+            bool is_valid() const;
+        private:
+            bool m_value = false;
+    };
+    using ACK = Bool;
     
     class : public virtual serial::Serializable {
         public:

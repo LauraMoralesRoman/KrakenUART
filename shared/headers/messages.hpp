@@ -51,7 +51,6 @@ namespace uahruart::messages {
             
             virtual const IDs type_id() const override {return IDs::UNDEF;}
 
-            primitives::Int length = 0;
             primitives::Int type = static_cast<uint16_t>(IDs::UNDEF);
     };
 
