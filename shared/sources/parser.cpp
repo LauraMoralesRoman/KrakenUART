@@ -52,9 +52,9 @@ bool Protocol::send(const uahruart::serial::Serializable& serializable) {
     messages::Header tmp_header;
     tmp_header.type = static_cast<size_t>(serializable.type_id());
 
-    m_buffer = m_buffer << tmp_header << primitives::SEPARATOR << serializable << '\0';
+    m_buffer = m_buffer << tmp_header << primitives::SEPARATOR << serializable << primitives::SEPARATOR << '\0';
 
-    m_on_write_callback(m_internal_buffer.data(), m_buffer.ammount_rw());
+    m_on_write_callback(m_internal_buffer.data());
     m_sent_size = m_buffer.ammount_rw();
 
     m_flags |= SENDING_DATA;
@@ -63,19 +63,19 @@ bool Protocol::send(const uahruart::serial::Serializable& serializable) {
     return true;
 }
 
-bool Protocol::call(const char *device, const char *method) {
+bool Protocol::call(const char *device, const char *method, int32_t arg) {
     messages::RPCCall tmp_call;
 
     tmp_call.function_hash = utils::hash_string(device) ^ utils::hash_string(method);
     m_call_uuid_seed = utils::hash_uint32(m_call_uuid_seed);
     tmp_call.call_uuid = m_call_uuid_seed;
-    tmp_call.arg = 14;
+    tmp_call.arg = arg;
 
     send(tmp_call);
 
     return true;
 }
 
-void Protocol::on_write(functor<void (const char *, size_t)> &&callback) {
+void Protocol::on_write(functor<void (const char *)> &&callback) {
     m_on_write_callback = std::move(callback);
 }

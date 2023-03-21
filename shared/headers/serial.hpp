@@ -26,7 +26,7 @@ namespace uahruart::serial {
             size_t m_SIZE;
             char* m_buffer;
             size_t m_buffer_start;
-            mutable size_t m_ammount_rw;
+            mutable size_t m_ammount_rw = 0;
 
             friend serial::SerialBuffer operator<<(SerialBuffer buffer, const Serializable& serializable);
             friend serial::SerialBuffer operator>>(const SerialBuffer buffer, Serializable& serializable);

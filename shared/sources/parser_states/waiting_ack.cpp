@@ -14,10 +14,11 @@ ParserState Protocol::s_waiting_ack() {
 
     // Check if ACK is valid
     if (tmp_ack.to_underlying()) {
+        m_flags &= ~SENDING_DATA;
         return std::bind(&Protocol::s_idle, this);
     }
 
     // Resend information, ACK was invalid
-    m_on_write_callback(m_internal_buffer.data(), m_sent_size);
+    m_on_write_callback(m_internal_buffer.data());
     return std::bind(&Protocol::s_waiting_ack, this);
 }

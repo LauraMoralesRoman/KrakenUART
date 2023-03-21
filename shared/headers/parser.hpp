@@ -45,9 +45,9 @@ namespace uahruart::parser {
             void receive(string& received);
             bool send(const serial::Serializable& serializable);
 
-            bool call(const char* device, const char* method);
+            bool call(const char* device, const char* method, int32_t arg);
 
-            void on_write(functor<void(const char*, size_t)>&& callback);
+            void on_write(functor<void(const char*)>&& callback);
 
         private:
             CallbackStore m_store;
@@ -71,7 +71,7 @@ namespace uahruart::parser {
             serial::SerialBuffer m_buffer;
             std::array<char, BUFFER_SIZE> m_internal_buffer;
 
-            functor<void(const char*, size_t)> m_on_write_callback;
+            functor<void(const char*)> m_on_write_callback;
             size_t m_sent_size = 0;
     };  
 

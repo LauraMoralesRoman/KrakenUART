@@ -21,14 +21,10 @@ int main() {
 
     // std::array<char, uahruart::parser::BUFFER_SIZE> buffer;
 
-    protocol.on_write([](const char* buffer, size_t size) {
+    protocol.on_write([](const char* buffer) {
         std::cout << buffer << '\n';
     });
 
-    protocol.on_type(uahruart::IDs::PRIMITIVE_INT, std::function<void(const uahruart::primitives::Int&)>{[&](const auto& msg) {
-        std::cout << "Entero: " << msg.to_underlying() << '\n';
-    }});
-    
     // protocol.call("traccion", "avanzar");
 
     string msg = "4:-1156248511:1098118400:14:";

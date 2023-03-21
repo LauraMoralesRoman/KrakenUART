@@ -16,12 +16,16 @@ SerialBuffer uahruart::serial::operator>>(const SerialBuffer buffer, Serializabl
 
 SerialBuffer uahruart::serial::operator<<(SerialBuffer buffer, const char msg) {
     buffer[0] = msg;
-    return buffer + 1;
+    auto new_buffer = buffer + 1;
+    new_buffer.m_ammount_rw += 1;
+    return new_buffer;
 }
 
 SerialBuffer uahruart::serial::operator>>(const SerialBuffer buffer, char& msg) {
     msg = buffer[0];
-    return buffer + 1;
+    auto new_buffer = buffer + 1;
+    new_buffer.m_ammount_rw += 1;
+    return new_buffer;
 }
 
 SerialBuffer::SerialBuffer(const size_t size, char* buffer) 
