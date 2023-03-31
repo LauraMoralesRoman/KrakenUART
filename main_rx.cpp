@@ -15,12 +15,18 @@ int main (int argc, char *argv[])
 
     // Open serial port
     auto port = open_serial(argv[1]);
-    std::cout << port << '\n';
+
+    if (port < 0) {
+        std::cout << "Could not open port " << argv[1] << '\n';
+        exit(1);
+    }
 
     uahruart::parser::Protocol protocol;
 
-    protocol.register_method("traccion", "avanzar", [](int32_t arg) -> void{
+    protocol.register_method("traccion", "avanzar", [&](int32_t arg) -> void{
         std::cout << "Se ha avanzado " << arg << "mm\n";
+        uahruart::primitives::Int msg = 123456;
+        protocol.send(msg);
     });
 
     protocol.register_method("traccion", "girar", [](int32_t arg) -> void {
@@ -30,10 +36,9 @@ int main (int argc, char *argv[])
     // std::array<char, uahruart::parser::BUFFER_SIZE> buffer;
 
     protocol.on_write([port](const char* buff) {
-        std::cout << "Writing bytes: " << buff << '\n';
         size_t ammount = strlen(buff);
         write(port, buff, ammount);
-        write(port, "\n", 1); // Flush 
+        write(port, "\0", 1); // Flush 
     });
     
     string str;

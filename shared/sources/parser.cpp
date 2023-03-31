@@ -44,7 +44,7 @@ void Protocol::receive(string& received) {
 
 bool Protocol::send(const uahruart::serial::Serializable& serializable) {
     // Data can only be sent if it SENDING_DATA is false
-    if (m_flags & SENDING_DATA)
+    if ((m_flags & SENDING_DATA) && !(m_flags & CAN_SEND))
         return false;
 
     m_buffer = serial::SerialBuffer(BUFFER_SIZE, m_internal_buffer.data());

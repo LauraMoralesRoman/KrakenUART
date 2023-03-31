@@ -2,14 +2,14 @@
 #include "serial_port.hpp"
 
 #include <cstdio>
-#include <cstdlib>
 #include <iostream>
 #include <unistd.h>
 #include <thread>
 #include <cstring>
+#include <list>
 
 int main (int argc, char *argv[]) {
-    std::cout << "Opening TX server\n";
+    std::cout << "Opening server\n";
     if (argc != 2) {
         std::cout << "Not enough arguments (pass the modem)\n";
         return 1;
@@ -17,24 +17,20 @@ int main (int argc, char *argv[]) {
 
     auto port = open_serial(argv[1]);
 
-    if (port < 0) {
+    if (port == -1) {
         std::cout << "Could not open port " << argv[1] << '\n';
-        exit(1);
+        return 1;
     }
 
     uahruart::parser::Protocol protocol;
 
+
     protocol.on_write([port](const char* buff) {
         std::cout << "Writing bytes: " << buff << '\n';
         size_t ammount = strlen(buff);
-        std::cout << "Strlen: " << ammount << '\n';
         write(port, buff, ammount);
-        write(port, "\0", 1); // Flush 
+        write(port, "\n\0", 2); // Flush 
     });
-
-    protocol.on_type(uahruart::IDs::PRIMITIVE_INT, functor<void (const uahruart::primitives::Int&)>{[&](auto msg) {
-        std::cout << "Received integer: " << msg.to_underlying() << '\n';
-    }});
 
     auto read_thread = std::thread([&]() {
         string str;
@@ -52,12 +48,27 @@ int main (int argc, char *argv[]) {
         }
     });
 
-    while (true) {
-        std::cout << "Call: ";
-        int arg;
-        std::cin >> arg;
-        protocol.call("traccion", "avanzar", arg);
-    }
+    std::list<std::pair<std::string, int32_t>> commands {
+        {"advance", 500},
+        {"advance", -500},
+        {"advance", 500},
+        {"advance", -500},
+        {"advance", 500},
+        {"advance", -500},
+        // {"turn", 90}
+    };
+
+    protocol.on_type(uahruart::IDs::PRIMITIVE_BOOL, functor<void (const uahruart::primitives::Bool&)>{[&](auto& msg) {
+        std::cout << "Sending next waypoint\n";
+        auto current = commands.front();
+        commands.pop_front();
+        protocol.call("traction", current.first.c_str(), current.second);
+    }});
+    
+    auto current = commands.front();
+    commands.pop_front();
+    protocol.call("traction", current.first.c_str(), current.second);
+
 
     read_thread.join();
 }
