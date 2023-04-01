@@ -32,9 +32,16 @@ int main (int argc, char *argv[]) {
         write(port, "\0", 1); // Flush 
     });
 
-    protocol.on_type(uahruart::IDs::PRIMITIVE_INT, functor<void (const uahruart::primitives::Int&)>{[&](auto msg) {
-        std::cout << "Received integer: " << msg.to_underlying() << '\n';
+    protocol.on_type(uahruart::IDs::ACTION_FINISHED, functor<void (const uahruart::messages::ActionFinished&)>{[&](auto msg) {
+        std::cout << "Action finished: " << msg.action.to_underlying() << '\n';
     }});
+
+    protocol.on_type(uahruart::IDs::ODOMETRY, functor<void(const uahruart::messages::Odometry&)>{[&](auto msg) {
+        std::cout << "Odometry: {x: " << msg.x.to_underlying()
+                             << ", y: " << msg.y.to_underlying()
+                             << ", o: " << msg.o.to_underlying() << '\n';
+    }});
+
 
     auto read_thread = std::thread([&]() {
         string str;

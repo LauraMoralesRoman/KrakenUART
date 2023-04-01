@@ -15,9 +15,11 @@ namespace uahruart::messages {
         TEST,
         // RMI messages
         RPC_CALL,
-        RPC_RESPONSE
+        RPC_RESPONSE,
 
         // Custom messages
+        ODOMETRY,
+        ACTION_FINISHED
     };
 
     // ==================================================
@@ -100,6 +102,33 @@ namespace uahruart::messages {
     // ==================================================
     // Custom messages
     // ==================================================
+    class Odometry : virtual public ProtocolMessage {
+        public:
+            primitives::Int x;
+            primitives::Int y;
+            primitives::Int o;
+
+            serial::SerialBuffer serialize(serial::SerialBuffer& buffer) const override;
+            serial::SerialBuffer deserialize(const serial::SerialBuffer& buffer) override;
+
+            uint8_t type() const override {return ODOMETRY;}
+            virtual const IDs type_id() const override {return IDs::ODOMETRY;}
+    };
+
+    class ActionFinished : virtual public ProtocolMessage {
+        public:
+            primitives::Int action;
+
+            serial::SerialBuffer serialize(serial::SerialBuffer& buffer) const override;
+            serial::SerialBuffer deserialize(const serial::SerialBuffer& buffer) override;
+
+            enum {
+                
+            };
+
+            uint8_t type() const override {return ACTION_FINISHED;}
+            virtual const IDs type_id() const override {return IDs::ACTION_FINISHED;}
+    };
 }
 
 #endif // MESSAGES_HPP

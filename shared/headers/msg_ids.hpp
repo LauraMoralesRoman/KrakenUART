@@ -14,6 +14,10 @@ namespace uahruart {
         RPC_CALL,
         RPC_RESPONSE,
 
+        // Robot messages
+        ODOMETRY,
+        ACTION_FINISHED,
+
         // Do not modify
         SIZE,
         UNDEF

@@ -32,6 +32,9 @@ CallbackStore::InvokersArr_t CallbackStore::m_invokers {
     
     T(messages::Test),
     T(messages::RPCCall),
-    T(messages::RPCResponse)
+    T(messages::RPCResponse),
+
+    T(messages::Odometry),
+    T(messages::ActionFinished)
 };
 #undef T

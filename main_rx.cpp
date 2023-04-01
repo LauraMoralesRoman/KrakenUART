@@ -25,12 +25,18 @@ int main (int argc, char *argv[])
 
     protocol.register_method("traccion", "avanzar", [&](int32_t arg) -> void{
         std::cout << "Se ha avanzado " << arg << "mm\n";
-        uahruart::primitives::Int msg = 123456;
-        protocol.send(msg);
+        uahruart::messages::ActionFinished finished;
+        finished.action = arg;
+        protocol.send(finished);
     });
 
-    protocol.register_method("traccion", "girar", [](int32_t arg) -> void {
+    protocol.register_method("traccion", "girar", [&](int32_t arg) -> void {
         std::cout << "Se han girado " << arg << "rad\n";
+        uahruart::messages::Odometry odom;
+        odom.x = 123;
+        odom.y = 456;
+        odom.o = 789;
+        protocol.send(odom);
     });
 
     // std::array<char, uahruart::parser::BUFFER_SIZE> buffer;
