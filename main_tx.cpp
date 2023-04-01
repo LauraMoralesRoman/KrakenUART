@@ -54,9 +54,10 @@ int main (int argc, char *argv[]) {
 
     while (true) {
         std::cout << "Call: ";
+        std::string cmd;
         int arg;
-        std::cin >> arg;
-        protocol.call("traccion", "avanzar", arg);
+        std::cin >> cmd >> arg;
+        protocol.call("traccion", cmd.c_str(), arg);
     }
 
     read_thread.join();
