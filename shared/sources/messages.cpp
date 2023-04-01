@@ -36,3 +36,18 @@ uahruart::serial::SerialBuffer RPCResponse::deserialize(const serial::SerialBuff
     return buffer >> call_uuid >> primitives::SEPARATOR >> ret;
 }
 
+uahruart::serial::SerialBuffer Odometry::serialize(serial::SerialBuffer &buffer) const {
+    return buffer << x << primitives::SEPARATOR << y << primitives::SEPARATOR << o;
+}
+
+uahruart::serial::SerialBuffer Odometry::deserialize(const serial::SerialBuffer &buffer) {
+    return buffer >> x >> primitives::SEPARATOR >> y >> primitives::SEPARATOR >> o;
+}
+
+uahruart::serial::SerialBuffer ActionFinished::serialize(serial::SerialBuffer &buffer) const {
+    return buffer << action;
+}
+
+uahruart::serial::SerialBuffer ActionFinished::deserialize(const serial::SerialBuffer &buffer) {
+    return buffer >> action;
+}

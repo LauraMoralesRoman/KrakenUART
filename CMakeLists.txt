@@ -14,7 +14,7 @@ add_subdirectory(shared)
 
 set (SERVER_FILES serial_port.hpp serial_port.cpp)
 
-add_compile_options(-Wall -fanalyzer)
+add_compile_options(-Wall)
 add_executable(ProtocolV3 main.cpp)
 target_link_libraries(ProtocolV3 protocol -lpthread)
 
