@@ -24,7 +24,8 @@ int main (int argc, char *argv[]) {
 
     uahruart::parser::Protocol protocol;
 
-    protocol.on_write([port](const char* buff) {
+    protocol.on_write([port](const char* buff) 
+    {
         std::cout << "Writing bytes: " << buff << '\n';
         size_t ammount = strlen(buff);
         std::cout << "Strlen: " << ammount << '\n';
@@ -32,7 +33,8 @@ int main (int argc, char *argv[]) {
         write(port, "\0", 1); // Flush 
     });
 
-    protocol.on_type(uahruart::IDs::ACTION_FINISHED, functor<void (const uahruart::messages::ActionFinished&)>{[&](auto msg) {
+    protocol.on_type(uahruart::IDs::ACTION_FINISHED, functor<void (const uahruart::messages::ActionFinished&)>{[&](auto msg) 
+    {
         std::cout << "Action finished: " << msg.action.to_underlying() << '\n';
     }});
 
@@ -43,7 +45,8 @@ int main (int argc, char *argv[]) {
     }});
 
 
-    auto read_thread = std::thread([&]() {
+    auto read_thread = std::thread([&]() 
+    {
         string str;
         while (true) {
             char c;
@@ -59,12 +62,18 @@ int main (int argc, char *argv[]) {
         }
     });
 
-    while (true) {
-        std::cout << "Call: ";
+    while (true) 
+    {
+        std::string device;
         std::string cmd;
         int arg;
-        std::cin >> cmd >> arg;
-        protocol.call("traccion", cmd.c_str(), arg);
+        std::cout   << "Device: ";
+        std::cin    >> device;        
+        std::cout   << "Call: ";
+        std::cin    >> cmd; 
+        std::cout   << "Arg: ";
+        std::cin    >> arg;
+        protocol.call(device.c_str(), cmd.c_str(), arg);
     }
 
     read_thread.join();
