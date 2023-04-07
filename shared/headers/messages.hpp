@@ -122,8 +122,12 @@ namespace uahruart::messages {
             serial::SerialBuffer serialize(serial::SerialBuffer& buffer) const override;
             serial::SerialBuffer deserialize(const serial::SerialBuffer& buffer) override;
 
+            // Finished actions
             enum {
-                
+                TRACTION,
+                SERVO,
+                // Keep this one
+                NONE // If that action doesn't finish (or does so immediately)
             };
 
             uint8_t type() const override {return ACTION_FINISHED;}
