@@ -50,12 +50,13 @@ int main (int argc, char *argv[]) {
 
     std::list<std::pair<std::string, int32_t>> commands {
         {"advance", 500},
-        {"advance", -500},
+        {"turn", 90},
         {"advance", 500},
-        {"advance", -500},
-        {"advance", 500},
-        {"advance", -500},
-        // {"turn", 90}
+        // {"turn", 90},
+        // {"advance", 500},
+        // {"turn", 90},
+        // {"advance", 500},
+        // {"turn", 90}        
     };
 
     protocol.on_type(uahruart::IDs::PRIMITIVE_BOOL, functor<void (const uahruart::primitives::Bool&)>{[&](auto& msg) {
