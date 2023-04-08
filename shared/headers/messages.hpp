@@ -127,7 +127,8 @@ namespace uahruart::messages {
             enum Actions {
                 TRACTION,
                 SERVO,
-                // Keep this one
+                // Keep this ones you dumb fuck
+                SIZE,
                 NONE // If that action doesn't finish (or does so immediately)
             };
 
