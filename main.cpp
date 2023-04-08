@@ -11,12 +11,14 @@
 int main() {
     uahruart::parser::Protocol protocol;
 
-    protocol.register_method("traccion", "avanzar", [](int32_t arg) -> void{
+    protocol.register_method("traccion", "avanzar", [](int32_t arg) {
         std::cout << "Se ha avanzado " << arg << "mm\n";
+        return uahruart::messages::ActionFinished::TRACTION;
     });
 
-    protocol.register_method("traccion", "girar", [](int32_t arg) -> void {
+    protocol.register_method("traccion", "girar", [](int32_t arg) {
         std::cout << "Se han girado " << arg << "rad\n";
+        return uahruart::messages::ActionFinished::TRACTION;
     });
 
     // std::array<char, uahruart::parser::BUFFER_SIZE> buffer;

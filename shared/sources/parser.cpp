@@ -19,19 +19,31 @@ Protocol::Protocol()
     // Add callbacks for RPCCall and RPCResponse
     m_store.on(IDs::RPC_CALL, functor<void(const messages::RPCCall&)>{[&](auto& msg) {
         LOG("Call received: ", msg.arg.to_underlying());
-        if (m_registered_methods.count(msg.function_hash.to_underlying()) != 0)
-            m_registered_methods.at(msg.function_hash.to_underlying())(msg.arg.to_underlying());
+        if (m_registered_methods.count(msg.function_hash.to_underlying()) != 0) {
+            auto ret_val = m_registered_methods.at(msg.function_hash.to_underlying())(msg.arg.to_underlying());
+            // Send response back to caller
+            if (ret_val != messages::ActionFinished::Actions::NONE) {
+                messages::RPCResponse response;
+                response.call_uuid = msg.call_uuid;
+                response.ret = ret_val;
+                send(response);
+            }
+        }
         else {
             LOG("Function with hash:", msg.function_hash.to_underlying(), "not found");
+            // Send NOT_FOUND 
+            messages::RPCResponse response;
+            response.valid = false;
+            send(response);
         }
     }});
 
-    m_store.on(IDs::RPC_RESPONSE, functor<void(const messages::RPCResponse&)>{[&](auto& msg) {
-        LOG("Response received");
-    }});
+    // m_store.on(IDs::RPC_RESPONSE, functor<void(const messages::RPCResponse&)>{[&](auto& msg) {
+    //     LOG("Response received");
+    // }});
 }
 
-void Protocol::register_method(const char* device, const char* method, functor<void(int32_t)>&& callback) {
+void Protocol::register_method(const char* device, const char* method, functor<messages::ActionFinished::Actions(int32_t)>&& callback) {
     utils::hash_t function_hash = utils::hash_string(device) ^ utils::hash_string(method);
         m_registered_methods.insert({function_hash, std::move(callback)});
 }
@@ -46,6 +58,9 @@ bool Protocol::send(const uahruart::serial::Serializable& serializable) {
     // Data can only be sent if it SENDING_DATA is false
     if ((m_flags & SENDING_DATA) && !(m_flags & CAN_SEND))
         return false;
+
+    // Clear CAN_SEND flag
+    m_flags &= ~CAN_SEND;
 
     m_buffer = serial::SerialBuffer(BUFFER_SIZE, m_internal_buffer.data());
 

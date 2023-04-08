@@ -1,6 +1,7 @@
 #include "shared/protocol.hpp"
 #include "serial_port.hpp"
 
+#include <functional>
 #include <iostream>
 #include <unistd.h>
 #include <cstring>
@@ -23,20 +24,22 @@ int main (int argc, char *argv[])
 
     uahruart::parser::Protocol protocol;
 
-    protocol.register_method("traccion", "avanzar", [&](int32_t arg) -> void{
+    protocol.register_method("traccion", "avanzar", [&](int32_t arg) {
         std::cout << "Se ha avanzado " << arg << "mm\n";
-        uahruart::messages::ActionFinished finished;
-        finished.action = arg;
-        protocol.send(finished);
+        // uahruart::messages::ActionFinished finished;
+        // finished.action = arg;
+        // protocol.send(finished);
+        return uahruart::messages::ActionFinished::TRACTION;
     });
 
-    protocol.register_method("traccion", "girar", [&](int32_t arg) -> void {
+    protocol.register_method("traccion", "girar", [&](int32_t arg) {
         std::cout << "Se han girado " << arg << "rad\n";
         uahruart::messages::Odometry odom;
         odom.x = 123;
         odom.y = 456;
         odom.o = 789;
         protocol.send(odom);
+        return uahruart::messages::ActionFinished::TRACTION;
     });
 
     // std::array<char, uahruart::parser::BUFFER_SIZE> buffer;
@@ -46,6 +49,10 @@ int main (int argc, char *argv[])
         write(port, buff, ammount);
         write(port, "\0", 1); // Flush 
     });
+
+    protocol.on_type(uahruart::IDs::ACTION_FINISHED, std::function<void(const uahruart::messages::ActionFinished&)>{[](auto& msg) {
+        std::cout << msg.action.to_underlying() << '\n';
+    }});
     
     string str;
     while (true) {
@@ -59,6 +66,7 @@ int main (int argc, char *argv[])
             str += c;
         }
     }
+
 
     return 0;
 }   

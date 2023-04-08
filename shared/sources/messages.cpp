@@ -29,11 +29,11 @@ uahruart::serial::SerialBuffer RPCCall::deserialize(const serial::SerialBuffer &
 }
 
 uahruart::serial::SerialBuffer RPCResponse::serialize(serial::SerialBuffer &buffer) const {
-    return buffer << call_uuid << primitives::SEPARATOR << ret;
+    return buffer << call_uuid << primitives::SEPARATOR << ret << primitives::SEPARATOR << valid;
 }
 
 uahruart::serial::SerialBuffer RPCResponse::deserialize(const serial::SerialBuffer &buffer) {
-    return buffer >> call_uuid >> primitives::SEPARATOR >> ret;
+    return buffer >> call_uuid >> primitives::SEPARATOR >> ret >> primitives::SEPARATOR >> valid;
 }
 
 uahruart::serial::SerialBuffer Odometry::serialize(serial::SerialBuffer &buffer) const {

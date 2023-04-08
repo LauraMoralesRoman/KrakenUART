@@ -38,6 +38,12 @@ int main (int argc, char *argv[]) {
         std::cout << "Action finished: " << msg.action.to_underlying() << '\n';
     }});
 
+    protocol.on_type(uahruart::IDs::RPC_RESPONSE, functor<void (const uahruart::messages::RPCResponse&)>{[&](auto msg) 
+    {
+        std::cout << "Call response: " << msg.call_uuid.to_underlying() << '\n';
+        std::cout << "Valid: " << msg.valid.to_underlying() << '\n';
+    }});
+
     protocol.on_type(uahruart::IDs::ODOMETRY, functor<void(const uahruart::messages::Odometry&)>{[&](auto msg) {
         std::cout << "Odometry: {x: " << msg.x.to_underlying()
                              << ", y: " << msg.y.to_underlying()

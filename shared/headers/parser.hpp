@@ -40,7 +40,7 @@ namespace uahruart::parser {
                 m_store.on(id, std::move(callback));
             }
 
-            void register_method(const char* device, const char* method, functor<void(int32_t)>&& callback);
+            void register_method(const char* device, const char* method, functor<messages::ActionFinished::Actions(int32_t)>&& callback);
 
             void receive(string& received);
             bool send(const serial::Serializable& serializable);
@@ -51,7 +51,7 @@ namespace uahruart::parser {
 
         private:
             CallbackStore m_store;
-            std::map<utils::hash_t, functor<void(int32_t)>> m_registered_methods;
+            std::map<utils::hash_t, functor<messages::ActionFinished::Actions(int32_t)>> m_registered_methods;
             utils::hash_t m_call_uuid_seed = 123;
 
             ParserState s_idle();

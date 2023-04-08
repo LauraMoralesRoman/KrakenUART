@@ -91,6 +91,7 @@ namespace uahruart::messages {
         public:
             primitives::Int call_uuid;
             primitives::Int ret;
+            primitives::Bool valid = true;
 
             serial::SerialBuffer serialize(serial::SerialBuffer& buffer) const override;
             serial::SerialBuffer deserialize(const serial::SerialBuffer& buffer) override;
@@ -123,7 +124,7 @@ namespace uahruart::messages {
             serial::SerialBuffer deserialize(const serial::SerialBuffer& buffer) override;
 
             // Finished actions
-            enum {
+            enum Actions {
                 TRACTION,
                 SERVO,
                 // Keep this one
