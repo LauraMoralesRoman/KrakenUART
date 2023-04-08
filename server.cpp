@@ -52,20 +52,22 @@ int main (int argc, char *argv[]) {
         {"advance", 500},
         {"turn", 90},
         {"advance", 500},
-        // {"turn", 90},
-        // {"advance", 500},
-        // {"turn", 90},
-        // {"advance", 500},
-        // {"turn", 90}        
+        {"turn", 90},
+        {"advance", 500},
+        {"turn", 90},
+        {"advance", 500},
+        {"turn", 90}        
     };
 
-    protocol.on_type(uahruart::IDs::PRIMITIVE_BOOL, functor<void (const uahruart::primitives::Bool&)>{[&](auto& msg) {
-        std::cout << "Sending next waypoint\n";
-        auto current = commands.front();
-        commands.pop_front();
-        protocol.call("traction", current.first.c_str(), current.second);
+    protocol.on_type(uahruart::IDs::ACTION_FINISHED, functor<void (const uahruart::messages::ActionFinished&)>{[&](auto& msg) {
+        if (commands.size()) {
+            std::cout << "Sending next waypoint\n";
+            auto current = commands.front();
+            commands.pop_front();
+            protocol.call("traction", current.first.c_str(), current.second);
+        }
     }});
-    
+
     auto current = commands.front();
     commands.pop_front();
     protocol.call("traction", current.first.c_str(), current.second);

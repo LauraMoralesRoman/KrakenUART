@@ -10,7 +10,6 @@ ParserState Protocol::s_waiting_ack() {
     // Read value
     primitives::ACK tmp_ack;
     m_buffer >> tmp_ack;
-    std::cout << "ACK: " << tmp_ack.to_underlying() << '\n';
 
     // Check if ACK is valid
     if (tmp_ack.to_underlying()) {

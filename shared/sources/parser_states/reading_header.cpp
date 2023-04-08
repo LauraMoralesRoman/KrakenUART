@@ -13,7 +13,8 @@ ParserState Protocol::s_reading_header() {
     // Check header constraints
     if (header.type.to_underlying() > static_cast<int>(IDs::SIZE)) {
         // Invalid message
-        m_on_write_callback("0");
+        // m_on_write_callback("0");
+        m_on_write_callback("1:");
         return std::bind(&Protocol::s_idle, this);
     }
 
