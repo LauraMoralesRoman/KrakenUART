@@ -26,10 +26,12 @@ add_custom_target(run
 add_executable(ProtocolV3_TX main_tx.cpp ${SERVER_FILES})
 add_executable(ProtocolV3_RX main_rx.cpp ${SERVER_FILES})
 add_executable(Server server.cpp ${SERVER_FILES})
+add_executable(Control main_traction.cpp ${SERVER_FILES})
 
 target_link_libraries(ProtocolV3_TX protocol -lpthread)
 target_link_libraries(ProtocolV3_RX protocol -lpthread)
 target_link_libraries(Server protocol -lpthread)
+target_link_libraries(Control protocol -lpthread)
 
 set (modem_rx /dev/pts/5)
 set (modem_tx /dev/pts/6)
