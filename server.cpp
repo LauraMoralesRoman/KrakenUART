@@ -29,7 +29,7 @@ int main (int argc, char *argv[]) {
         std::cout << "Writing bytes: " << buff << '\n';
         size_t ammount = strlen(buff);
         write(port, buff, ammount);
-        write(port, "\n\0", 2); // Flush 
+        write(port, "\n\0", 1); // Flush 
     });
 
     auto read_thread = std::thread([&]() {
@@ -70,6 +70,7 @@ int main (int argc, char *argv[]) {
 
     auto current = commands.front();
     commands.pop_front();
+    std::cout << "Calling: " << current.first.c_str() << '\n';
     protocol.call("traction", current.first.c_str(), current.second);
 
 
