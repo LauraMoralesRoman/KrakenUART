@@ -19,6 +19,7 @@ Protocol::Protocol()
     // Add callbacks for RPCCall and RPCResponse
     m_store.on(IDs::RPC_CALL, functor<void(const messages::RPCCall&)>{[&](auto& msg) {
         LOG("Call received: ", msg.arg.to_underlying());
+        std::cout.flush();
         if (m_registered_methods.count(msg.function_hash.to_underlying()) != 0) {
             auto ret_val = m_registered_methods.at(msg.function_hash.to_underlying())(msg.arg.to_underlying());
             // Send response back to caller
@@ -36,6 +37,10 @@ Protocol::Protocol()
             response.valid = false;
             send(response);
         }
+    }});
+
+    m_store.on(IDs::ACK, functor<void(const messages::RPCCall&)>{[&](auto& msg) {
+        m_flags &= ~PENDING_ACK;
     }});
 
     // m_store.on(IDs::RPC_RESPONSE, functor<void(const messages::RPCResponse&)>{[&](auto& msg) {
@@ -56,8 +61,8 @@ void Protocol::receive(string& received) {
 
 bool Protocol::send(const uahruart::serial::Serializable& serializable) {
     // Data can only be sent if it SENDING_DATA is false
-    if ((m_flags & SENDING_DATA) && !(m_flags & CAN_SEND))
-        return false;
+    // if ((m_flags & SENDING_DATA) && !(m_flags & CAN_SEND) && !(m_flags & PENDING_ACK))
+    //     return false;
 
     // Clear CAN_SEND flag
     m_flags &= ~CAN_SEND;
@@ -73,7 +78,7 @@ bool Protocol::send(const uahruart::serial::Serializable& serializable) {
     m_sent_size = m_buffer.ammount_rw();
 
     m_flags |= SENDING_DATA;
-    m_current_state = m_current_state();
+    // m_current_state = m_current_state();
 
     return true;
 }

@@ -31,8 +31,8 @@ target_link_libraries(ProtocolV3_TX protocol -lpthread)
 target_link_libraries(ProtocolV3_RX protocol -lpthread)
 target_link_libraries(Server protocol -lpthread)
 
-set (modem_rx /dev/pts/5)
-set (modem_tx /dev/pts/6)
+set (modem_rx /dev/pts/2)
+set (modem_tx /dev/pts/3)
 
 add_custom_target(test
     COMMAND "mprocs" "--names" "'TX','RX'" "--" './ProtocolV3_TX ${modem_tx}' './ProtocolV3_RX ${modem_rx}'

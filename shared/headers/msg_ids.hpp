@@ -11,6 +11,7 @@ namespace uahruart {
         PRIMITIVE_BOOL,
         // Messages
         TEST,
+        ACK,
         RPC_CALL,
         RPC_RESPONSE,
 

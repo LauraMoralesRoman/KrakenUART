@@ -50,6 +50,10 @@ int main (int argc, char *argv[]) {
                              << ", o: " << msg.o.to_underlying() << '\n';
     }});
 
+    protocol.on_type(uahruart::IDs::ACK, functor<void(const uahruart::messages::Ack&)>{[&](auto msg) {
+        std::cout << "ACK received\n";
+    }});
+
 
     auto read_thread = std::thread([&]() 
     {

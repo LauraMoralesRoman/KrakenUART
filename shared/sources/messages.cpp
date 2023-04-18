@@ -20,6 +20,15 @@ uahruart::serial::SerialBuffer Test::deserialize(const serial::SerialBuffer &buf
     return buffer >> number;
 }
 
+uahruart::serial::SerialBuffer Ack::serialize(serial::SerialBuffer &buffer) const {
+    buffer[0] = '0';
+    return buffer + 1;
+}
+
+uahruart::serial::SerialBuffer Ack::deserialize(const serial::SerialBuffer &buffer) {
+    return buffer;
+}
+
 uahruart::serial::SerialBuffer RPCCall::serialize(serial::SerialBuffer &buffer) const {
     return buffer << function_hash << primitives::SEPARATOR << call_uuid << primitives::SEPARATOR << arg;
 }

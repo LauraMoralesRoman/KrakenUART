@@ -13,6 +13,7 @@ namespace uahruart::messages {
     enum Types : uint8_t {
         // Protocol messages
         TEST,
+        ACK,
         // RMI messages
         RPC_CALL,
         RPC_RESPONSE,
@@ -69,6 +70,15 @@ namespace uahruart::messages {
 
             uint8_t type() const override {return TEST;}
             virtual const IDs type_id() const override {return IDs::TEST;}
+    };
+
+    class Ack : virtual public ProtocolMessage {
+        public:
+            serial::SerialBuffer serialize(serial::SerialBuffer& buffer) const override;
+            serial::SerialBuffer deserialize(const serial::SerialBuffer& buffer) override;
+
+            uint8_t type() const override {return ACK;}
+            virtual const IDs type_id() const override {return IDs::ACK;}
     };
 
     // ==================================================

@@ -31,6 +31,7 @@ CallbackStore::InvokersArr_t CallbackStore::m_invokers {
     T(primitives::Bool),
     
     T(messages::Test),
+    T(messages::Ack),
     T(messages::RPCCall),
     T(messages::RPCResponse),
 

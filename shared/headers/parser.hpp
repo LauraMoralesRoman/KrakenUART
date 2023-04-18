@@ -64,6 +64,7 @@ namespace uahruart::parser {
             constexpr static int8_t SENDING_DATA = (1 << 0);
             constexpr static int8_t CAN_SEND = (1 << 1);
             constexpr static int8_t ERROR = (1 << 2);
+            constexpr static int8_t PENDING_ACK = (1 << 3);
 
             // Parser states
             ParserState m_current_state;
