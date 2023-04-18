@@ -19,7 +19,6 @@ Protocol::Protocol()
     // Add callbacks for RPCCall and RPCResponse
     m_store.on(IDs::RPC_CALL, functor<void(const messages::RPCCall&)>{[&](auto& msg) {
         LOG("Call received: ", msg.arg.to_underlying());
-        std::cout.flush();
         if (m_registered_methods.count(msg.function_hash.to_underlying()) != 0) {
             auto ret_val = m_registered_methods.at(msg.function_hash.to_underlying())(msg.arg.to_underlying());
             // Send response back to caller
